@@ -1,0 +1,75 @@
+<app-nav-bar></app-nav-bar>
+<hr>
+<h1 class="text-center"> Solicitud de Cotizaciones  </h1>
+
+<div class=" container">
+  <div class="row">
+    <!--
+    <div class="col-md-1"></div>
+    -->
+    <div class="col-md-12 " *ngIf="oc.length>0">
+      <table class="table table-stripped" >
+        <thead>
+          <tr>
+            <th> codigo </th>
+            <th> responsable </th>
+            <th> proyecto</th>
+            <th> total </th>
+            <th> estatus</th>
+            <th><i class="fa fa-cog"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of oc">
+            <th>{{i.purchase_order[0].unicode}}</th>
+            <td>{{i.purchase_order[0].ord_responsable}}</td>
+            <td>{{i.purchase_order[0].ord_proyecto || uppercase }}</td>
+            <th><a class="btn btn-sm" data-toggle="modal" data-target=".bd-example-modal-lg"
+                (click)="printPDF(i)">{{i.total }}</a></th>
+            <td>
+                <a class="badge badge-primary" *ngIf="i.purchase_order[0].ord_estatus == 2" > Revision Direccion</a>
+                <a class="badge badge-success" *ngIf="i.purchase_order[0].ord_estatus == 3" (click)="setFactura(i)"> Cotizacion Proveedor</a>
+              <td>
+            <td><input type="checkbox" (change)="arrAutorization(i.purchase_order[0].ord_id)" *ngIf=" i.purchase_order[0].ord_estatus == 2"></td>
+          </tr>
+          <tr>
+            <th>Total</th>
+            <th></th>
+            <th></th>
+            <th>{{getSumAll()}}</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </tbody>
+      </table>
+      <button class="btn btn-primary" (click)="sendQuoatations()"> Cotizacion Proveedores</button>
+    </div>
+    <div class="col-md-8 container" *ngIf="!oc.length">
+        <br><br><br><br>
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading text-center">No existen Datos Ordenes de Compra Pendientes</h4>
+            <p>Esto puede ocurrir debido a que no existen Ordenes de Compra de compra pendientes por validar, por otro lado puede que no se alla revisado ninguna orden de compra
+              <a href="#/autorizations" (click)="redirect('autorizations')"> ir a revision  </a>
+
+            </p>
+
+          </div>
+    </div>
+    <!--
+    <div class="col-md-1"></div>
+    -->
+
+    <div class="row ">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 ">
+            <pdf-viewer [src]="pdfSrc" [render-text]="true"></pdf-viewer>
+        </div>
+        <div class="col-md-2"></div>
+
+
+
+    </div>
+  </div>
+
+</div>
+

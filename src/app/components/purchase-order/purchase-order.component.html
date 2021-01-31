@@ -1,0 +1,255 @@
+<app-nav-bar></app-nav-bar>
+<hr>
+<h1 class="text-center"> Ordenes de Compra </h1>
+<hr>
+<div class="container">
+
+  <div class="container">
+    <div class="py-5 text-center">
+      <img class="d-block mx-auto mb-4" src="../../../assets/img/logo.PNG" alt="" width="72" height="72">
+      <h2>{{_catEmpleado.emp_fullname}}</h2>
+      <!--
+          <h2>{{auth.userObj.user.username}}</h2>
+          <p class="lead">Todas las ordenes de compra que realizen seran autorizadas por el jefe inmediato para posteriormente ser validadas por el Director de Finanzas</p>
+          -->
+    </div>
+
+    <div class="row">
+      <!-- Order By Rubro -->
+      <div class="col-md-4 order-md-2 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted"> Resumen Rubros Presupuestales </span>
+          <span class="badge badge-secondary badge-pill">{{purchaseOrdersResumen.length}}</span>
+        </h4>
+        <ul class="list-group mb-3">
+
+          <li class="list-group-item d-flex justify-content-between lh-condensed"
+            *ngFor="let rub of purchaseOrdersResumen">
+            <div>
+              <h6 class="my-0">{{rub.rup_descripcion}}</h6>
+              <small class="text-muted">{{rub.rup_clave}}</small>
+            </div>
+            <span class="text-muted">{{rub.purchases_orders.length}}</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col-md-8 order-md-1">
+        <h4 class="mb-3">Crear Orden de Compra</h4>
+        <form class="needs-validation" #form="ngForm" (submit)="submitPurchaseOrd(form)">
+          <h6> Datos del Solicitante </h6>
+          <div class="row">
+              <div class="col-md-12 mb-12">
+                  <label for="firstName">Proyecto</label>
+                  <input type="text" class="form-control" placeholder=" Nombre del Proyecto"
+                    name="_catPurchaseOrder.ord_proyecto" #_catPurchaseOrder.ord_proyecto="ngModel" 
+                    [(ngModel)]="_catPurchaseOrder.ord_proyecto" value="{{_catPurchaseOrder.ord_proyecto}}" [disabled]="enablesAll" >
+                </div>            
+          </div>
+
+          <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="firstName">Responsable</label>
+                    <input type="text" class="form-control" placeholder=" Responsabe  "
+                      name="_catPurchaseOrder.ord_responsable" #_catPurchaseOrder.ord_responsable="ngModel"
+                      [(ngModel)]="_catPurchaseOrder.ord_responsable" value="{{_catPurchaseOrder.ord_responsable}}" disabled>
+                  </div>                
+            <div class="col-md-6 mb-3">
+              <label for="username">Id Usuario</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">#</span>
+                </div>
+                <input type="text" class="form-control" placeholder=" Id Usuario  " name="_catPurchaseOrder.emp_id"
+                  #_catPurchaseOrder.emp_id="ngModel" [(ngModel)]="_catPurchaseOrder.emp_id"
+                  value="{{_catPurchaseOrder.emp_id}}" disabled>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <label for="centrocostos">Centro de Costos</label>
+              <select class="custom-select d-block w-100" id="centrocostos" name="_catCentroCosto"
+                [(ngModel)]="_catCentroCosto" disabled>
+                <option [ngValue]="cc" *ngFor="let cc of catCentroCostos">{{cc.cec_descripcion}}</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-4">
+              <label for="puesto">Puesto</label>
+              <select class="custom-select d-block w-100" id="puesto" name="puesto" [(ngModel)]="_catPuesto" required
+                disabled>
+                <option value="">Puesto</option>
+                <option [ngValue]="pto" *ngFor="let pto of catPuestos">{{pto.pto_descripcion}}</option>
+              </select>
+
+            </div>
+            <div class="col-md-4 mb-4">
+              <label for="rubroPresupuestal">Rubro Presupuestal</label>
+              <select class="custom-select d-block w-100" id="rubroPresupuestal" name="rubroPresupuestal"
+                id="rubroPresupuestal" [(ngModel)]="_catRubroPresupuestal" required (change)="setRubro()"
+                [disabled]="enablesAll">
+                <option value="">Rubro Presupuetal</option>
+                <option [ngValue]="r" *ngFor="let r of catRubrosPresupuestales">{{r.rup_descripcion}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+              <div class="col-md-12 mb-12">
+                  <label for="satate">Provedor</label>
+                  <select class="custom-select d-block w-100" id="cat_proovedor" name="cat_proovedor"
+                    [(ngModel)]="_catProveedor" (change)="selectProovedor()" [disabled]="enablesAll">
+                    <option value=""> -- Proveedores</option>
+                    <option [ngValue]="prv" *ngFor="let prv of catProveedores">{{prv.prv_nombre}}</option>
+                  </select>
+                </div>
+            <div class="col-md-12 mb-12">
+              <label for="_catPurchaseOrder.ord_detalle">Nota</label>
+              <textarea class="form-control" name="_catPurchaseOrder.ord_detalle"
+                #_catPurchaseOrder.ord_detalle="ngModel" [(ngModel)]="_catPurchaseOrder.ord_detalle"
+                value="{{_catPurchaseOrder.ord_detalle}}" rows="5" placeholder="Nota" [disabled]="enablesAll"></textarea>
+              <hr>
+            </div>              
+          </div>
+
+          <div class="row">
+            <button class="btn btn-primary btn-lg btn-block" type="submit" [hidden]="enablesAll" type="submit">Realizar
+              Orden de Compra</button>
+          </div>
+        </form>
+
+        <form *ngIf="enablesAll" class="needs-validation" #form="ngForm" (submit)="addElementOC(form)">
+          <h6> Detalle de la Orden de Compra</h6>
+          <div class="row">
+          
+              <div class="col-md-6 mb-6">
+                  <label for="satate">Categorias</label>
+                  <select class="custom-select d-block w-100" id="cat_descripcion" name="cat_descripcion"
+                    [(ngModel)]="_catCategoriaProduto" (change)="selectJustCat()">
+                    <option value=""> -- Categorias Productos</option>
+                    <option [ngValue]="cat" *ngFor="let cat of categoriasProductos">{{cat.cat_descripcion}}</option>
+                  </select>
+                </div>
+            <div class="col-md-6 mb-6" *ngIf="_catCategoriaProduto.cat_id != 0">
+              <label for="zip">Productos</label>
+              <select class="custom-select d-block w-100" id="cat_productos" name="cat_productos"
+                [(ngModel)]="_catProducto" (change)="setPreviousFields()">
+                <option value=""> -- Productos</option>
+                <option [ngValue]="cpro" *ngFor="let cpro of catSubProductos">{{cpro.pro_descripcion}}</option>
+              </select>
+            </div>
+          </div>
+          <hr class="mb-4">
+          <div class="row" *ngIf="_catProducto.pro_id != 0">
+            <div class="col-md-4 mb-4">
+              <label for="username">Clave</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">#</span>
+                </div>
+                <input type="text" class="form-control" placeholder=" Producto  " value="{{_catProducto.pro_clave}}"
+                  disabled>
+
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <label for="username">Costo Unitario</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">$</span>
+                </div>
+                <input type="text" class="form-control" placeholder=" Costo Unitario "
+                  name="_catPurchaseDetail.prd_pro_precio_unitario"
+                  #_catPurchaseDetail.prd_pro_precio_unitario="ngModel"
+                  [(ngModel)]="_catPurchaseDetail.prd_pro_precio_unitario" value="{{_catProducto.pro_precio_unitario}}"
+                  disabled>
+
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <label for="username">Unidad de Medida</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                </div>
+                <input type="text" class="form-control" placeholder=" Unidad de Medida  " value="{{categorieLabel}}"
+                  disabled>
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <label for="username">Cantidad</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                </div>
+                <input type="number" class="form-control" placeholder=" Cantidad  "
+                  name="_catPurchaseDetail.prd_cantidad" #_catPurchaseDetail.prd_cantidad="ngModel"
+                  [(ngModel)]="_catPurchaseDetail.prd_cantidad" value="{{_catPurchaseDetail.prd_cantidad}}"
+                  (focusout)="getPricePerItem()">
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+              <label for="username">Costo Total</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                </div>
+                <input type="number" class="form-control" placeholder=" Cantidad  "
+                  name="_catPurchaseDetail.prd_pro_precio_total" #_catPurchaseDetail.prd_pro_precio_total="ngModel"
+                  [(ngModel)]="_catPurchaseDetail.prd_pro_precio_total"
+                  value="{{_catPurchaseDetail.prd_pro_precio_total}}">
+              </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <label for="username"></label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                  </div>
+                  <button class="btn btn-primary" *ngIf="_catPurchaseDetail.prd_pro_precio_total!= 0 &&_catPurchaseDetail.prd_cantidad != 0 "> add </button>
+                </div>
+              </div>
+          </div>
+        </form>
+        <div class="row" *ngIf="catPurchaseDetail.length>0">
+          <h6> Desgloce y Total</h6>
+          <table class="table table-stripped">
+            <thead>
+              <tr>
+                  <th>cantidad</th>
+                  <th>detalle</th>
+                  <th>total</th>
+                  <th><i class="fa fa-cog"></i></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let ocD of catPurchaseDetail; let i = index">
+                  <td> {{ocD.prd_cantidad}} </td>
+                  <td> {{ocD.prd_pro_descripcion}} </td>
+                  <td>{{ocD.prd_pro_precio_total}} </td>
+                  <td> <a class="fa fa-trash" (click)="deleteItemsOC( i )"></a></td>
+              </tr>
+              <tr>
+                  <th>{{cantidad}}</th>
+                  <td></td>
+                  <th>{{total}}</th>
+              </tr>
+            </tbody>
+
+          </table>
+          <button class="btn btn-primary" (click)="sendItemsOC()">Cerrar Orde de Compra</button>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+      <p class="mb-1">&copy; 2019 Goods And Service Performed</p>
+
+      <ul class="list-inline">
+        <li class="list-inline-item"><a href="#">Privacy</a></li>
+        <li class="list-inline-item"><a href="#">Terms</a></li>
+        <li class="list-inline-item"><a href="#">Support</a></li>
+      </ul>
+
+    </footer>
+  </div>
+</div>

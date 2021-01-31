@@ -1,0 +1,99 @@
+<app-nav-bar></app-nav-bar>
+<hr>
+<h1 class="text-center"> Autorizacion de OC </h1>
+<hr>
+<div class=" container">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8 "  *ngIf="oc.length>0">
+      <table class="table table-stripped">
+        <thead>
+          <tr>
+            <th>codigo</th>
+            <th>responsable</th>
+            <th>proyecto</th>
+            <th> total </th>
+            <th><i class="fa fa-cog"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of oc">
+            <th>{{i.purchase_order[0].unicode}}</th>
+            <td>{{i.purchase_order[0].ord_responsable}}</td>
+            <td>{{i.purchase_order[0].ord_proyecto || uppercase }}</td>
+            <th><a href="" class="btn btn-sm" data-toggle="modal" data-target=".bd-example-modal-lg"
+                (click)="setDetailArray(i)">{{i.total }}</a></th>
+            <td><input type="checkbox" (change)="arrAutorization(i.purchase_order[0].ord_id)"></td>
+          </tr>
+          <tr>
+            <th>Total</th>
+            <th></th>
+            <th></th>
+            <th>{{getSumAll()}}</th>
+            <th></th>
+          </tr>
+
+        </tbody>
+      </table>
+      <button class="btn btn-primary" (click)="sendAutorized()"> Autorizacion Jefe de Area </button>
+    </div>
+    <div class="col-md-8 container" *ngIf="!oc.length">
+      <br><br><br><br>
+      <div class="alert alert-warning" role="alert">
+          <h4 class="alert-heading text-center">No Hay Existen ninguna Orden de Compra </h4>
+          <p>Esto se debe a que no hay ordenes de compra creadas, <a href="#/purchase-order" (click)="redirect('purchase-order')">  click si desea crear una nueva Orden de Compra </a></p>
+        </div>
+  </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+
+
+<!---
+    MODAL
+    --->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{unicode}} - {{proyecto}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-responsive">
+          <thead>
+            <tr>
+              <th>Articulo</th>
+              <th>Cantidad</th>
+              <th>Consto Unitario</th>
+              <th>Total</th>
+              <th>Unidad de Medida</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of ocd">
+              <td>{{c.prd_pro_descripcion}}</td>
+              <td>{{c.prd_cantidad}}</td>
+              <td>{{c.prd_pro_precio_unitario}}</td>
+              <td>{{getTotal(c.prd_cantidad,c.prd_pro_precio_unitario)}}</td>
+              <td>{{getLabel(c.prd_uds_id)}}</td>
+            </tr>
+            <tr>
+              <th>Total</th>
+              <th></th>
+              <th></th>
+              <th>{{tocd}}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

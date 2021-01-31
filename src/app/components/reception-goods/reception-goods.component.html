@@ -1,0 +1,121 @@
+<app-nav-bar></app-nav-bar>
+<hr>
+<h1 class="text-center"> Recepcion de Vienes   </h1>
+
+<div class=" container">
+    <div class="row" *ngIf="oc.length>0">
+      <table class="table table-stripped">
+        <thead>
+          <tr>
+              <th>Proveedor</th>
+              <!--<th>Girgo</th>-->
+              <th>Orden de Compra</th>
+              <th>Factura</th>
+              <th>Monto</th>
+              <!--<th>Dia de Recepcion</th>-->
+              <th>Validacion</th>
+              <th>Estatus</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let con of oc">
+              <!-- <td>{{con.purchase_contractual.prv_giro}}</td>
+               <td>{{con.purchase_contractual.orc_nit}}</td> -->
+              <td>{{con.purchase_contractual.prv_nombre}}</td>
+              <td><a  class="btn btn-sm" (click)="printPDF(con.purchase_contractual.oc)">{{con.purchase_contractual.oc}}</a></td>
+              <td><a  class="btn btn-sm" (click)="printPDF(con.purchase_contractual.orc_factura)">{{con.purchase_contractual.orc_factura}}</a></td>
+              <th><a class="btn btn-sm" data-toggle="modal" data-target=".bd-example-modal-lg"
+                (click)="setDetailArray(con)">{{con.purchase_contractual.orc_monto_total}}</a></th>
+              <!--<th><input type="date"></th>-->
+              <th><input type="checkbox" [checked]="con.purchase_contractual.orc_estatus == 9" (change)="arrAutorization(con.purchase_contractual.orc_id)" [disabled]='true'> </th>
+              <a class="badge badge-primary" *ngIf="con.purchase_contractual.orc_estatus == 1" > Entrega Pendiente </a>
+              <a class="badge badge-warning" *ngIf="con.purchase_contractual.orc_estatus == 9" > Check List Recepcion </a>
+              <a class="badge badge-success" *ngIf="con.purchase_contractual.orc_estatus == 2" > Entregado </a>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row" *ngIf="!oc.length">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 container" >
+            <br><br><br><br>
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading text-center">No existen entradas en el sistema </h4>
+                <p>Esto se debe a que no existen compras pendientes por recivir solicite informacion al jefe de almacen <a>  </a> <!--href="#/purchase-order" (click)="redirect('purchase-order')"--->
+
+                </p>
+
+              </div>
+        </div>
+        <div class="col-md-2"></div>
+
+    </div>
+    <div class="row" *ngIf="oc.length>0">
+      <button class="btn btn-primary" (click)="sendEntries()" [disabled]="!dataSend.length" > Generar Entradas </button>
+    </div>
+    <div class="row ">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 ">
+            <pdf-viewer [src]="pdfSrc" [render-text]="true"></pdf-viewer>
+        </div>
+        <div class="col-md-2"></div>
+
+
+
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">{{nombreCompany}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h6>Check list entrega  </h6>
+        <table class="table table-responsive">
+
+          <thead>
+            <tr>
+              <th>Articulo</th>
+              <th>Cantidad</th>
+              <th>Consto Unitario</th>
+              <th>Total</th>
+              <th>Revision</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of ocd">
+              <td>{{c.ocd_descripcion}}</td>
+              <td>{{c.ocd_cantidad}}</td>
+              <td>{{getUnit(c.ocd_cantidad,c.ocd_total)}}</td>
+              <td>{{c.ocd_total}}</td>
+              <td>
+                <button class="btn fa fa-check-square-o"  (click)="changeStatus(c)" *ngIf="c.ocd_estatus == 1"></button>
+                <button class="btn fa fa-plus-square"  (click)="changeStatus(c)" *ngIf="c.ocd_estatus == 0 "></button>
+              </td>
+            </tr>
+            <tr>
+              <th>Total</th>
+              <th></th>
+              <th></th>
+              <th>{{tocd}}</th>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

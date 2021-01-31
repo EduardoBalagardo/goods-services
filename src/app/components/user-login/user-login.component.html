@@ -1,0 +1,24 @@
+<div class="container">
+  <br><br><br><br><br>
+    <form class="form-signin">
+      <img class="text-center" src="./assets/img/logo.PNG" alt="" width="300" height="200">
+      <hr>
+      <label for="usuario" class="sr-only">Usuario</label>
+      <input class="form-control" placeholder="Usuario " name="user.user" #user.user="ngModel" [(ngModel)]="user.user"  >
+      <hr>
+      <label for="password" class="sr-only">Password</label>
+      <input  class="form-control" type="password" placeholder="Password" name="user.pass" #user.pass="ngModel" [(ngModel)]="user.pass" >
+
+      <button class="btn btn-lg btn-primary btn-block" (click)="getUserLogin()">Acceder</button>
+      <p class="text-center">&copy; 2019</p>
+    </form>
+
+    <div class="col-md-12" *ngIf="!isSuccess">
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading"> Error en credenciales </h4>
+        <p>Debera acceder con credenciales correctas verifique y vuelva a intentar</p>
+        <hr>
+      </div>
+    </div>
+
+  </div>

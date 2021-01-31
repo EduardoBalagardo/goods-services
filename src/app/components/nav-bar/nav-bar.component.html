@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-lg  navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">Goods And Services</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Compras
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLinkActive='active' routerLink="/purchase-order">Ordenes de Compra</a>
+          <a class="dropdown-item" routerLinkActive='active' routerLink="/autorizations">Autorizacion Ordenes de Compra</a>
+          <a class="dropdown-item" routerLinkActive='active' routerLink="/quatations">Solicitud de Cotizaciones</a>
+
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Almacen
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item"  routerLinkActive='active' routerLink="/reception-goods" > Recepcion De Vienes </a>
+            <a class="dropdown-item"  routerLinkActive='active' routerLink="/departures-warehouse"> Entradas y Salidas </a>            
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Inventarios
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Ubicacion de Bienes</a>
+          <a class="dropdown-item" href="#">Entregas</a>
+        </div>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" >
+            <a class="nav-link"  routerLinkActive='active' routerLink="/user-login" (click)="clearSession()">Salir</a>
+          </li>
+
+          </ul>
+    </form>
+  </div>
+</nav>
